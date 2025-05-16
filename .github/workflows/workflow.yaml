@@ -1,0 +1,23 @@
+name: first workflow
+on: [push, workflow_dispatch]
+jobs: 
+  checkout:
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: use nodejs 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: install dependencies
+        run: | 
+          yarn install
+          yarn build
+      - name: run unit tests
+        run: yarn test
+      - name: run integration tests
+        run: yarn test:e2e
+      - name: upload test results
+        uses: actions/upload-artifact@v4
+        with: 
+          test_results: '**jest-junit.xml'
